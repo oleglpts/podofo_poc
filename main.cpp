@@ -54,7 +54,7 @@ bool printDictionary(PdfDictionary &dictionary, bool old_level) {
                 }
                 else if (item.IsName()) {
                     const auto& name = item.GetName().GetName();
-                    level = getLevel(name);
+                    if (level)level = getLevel(name);
                     cout << name;
                 }
                 cout << " ";
