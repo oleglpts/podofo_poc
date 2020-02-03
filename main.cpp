@@ -1,5 +1,7 @@
 #include <ctime>
 #include <iostream>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <podofo/base/PdfData.h>
 #include <podofo/base/PdfError.h>
 #include <podofo/base/PdfArray.h>
@@ -87,6 +89,9 @@ int main(int argc, const char* argv[]) {
         document.SetStrictParsing(false);
         document.SetIgnoreBrokenObjects(true);
         document.ParseFile(argv[1], true);
+        string dir = string(argv[1]).append(".podofo_out");
+        rmdir(dir.c_str());
+        mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         for (auto object : objects) {
             if (object->HasStream()) {
                 bool stream_decode = true;
@@ -95,7 +100,7 @@ int main(int argc, const char* argv[]) {
                 stream_decode = printDictionary(dictionary, stream_decode);
                 // Output file name
                 ostringstream file_name;
-                file_name << "pdf_";
+                file_name << dir << "/pdf_";
                 file_name.width(4);
                 file_name.fill ('0');
                 file_name << i << "_0.dat";
